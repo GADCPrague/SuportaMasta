@@ -7,7 +7,15 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * Servisa, ktera pravidelne tika a vykonova kontrolu dat
+ * @author kovi
+ *
+ */
 public class TickService extends Service {
+	/**
+	 * Jmeno logovaciho tagu pro TickServicu
+	 */
 	public static final String LOG_TAG = "SmTickService";
 
 	@Override

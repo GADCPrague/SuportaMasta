@@ -9,9 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * Postara se o nastartovani procesu tickani pro stahovani dat.
+ * 
+ * @author kovi
+ */
 public class SetupReceiver extends BroadcastReceiver {
 	
-	// tikani po 20 sekundach
+	/**
+	 * Tikani po x sekundach
+	 */
 	private static final int TICK_INTERVAL_IN_SEC = 20;
 	
 	private static final int EXEC_INTERVAL = 20 * 1000;

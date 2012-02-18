@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * Tikne casovac a poslu ho dal na zpracovani.
+ * 
+ * @author kovi
+ */
 public class TickReceiver extends BroadcastReceiver {
 
 	@Override
