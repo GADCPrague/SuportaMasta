@@ -1,0 +1,2 @@
+Jak pracovat s Intents:
+	http://www.slideshare.net/CodeAndroid/android-intent-intent-filter-broadcast-receivers
