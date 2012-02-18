@@ -4,6 +4,8 @@
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">SuportaMasta</string>
     
-    <string name="process_name">supporta-masta-process</string>
-
+    <string name="tab_support_header">Saporty</string>
+    <string name="tab_logs_header">Logs</string>
+    <string name="tab_config_header">Konfig</string>
+    
 </resources>
