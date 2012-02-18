@@ -6,9 +6,23 @@
 
     <uses-sdk android:minSdkVersion="7" />
 
-    <application
+    <application android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
+        
+        <receiver android:name=".scheduler.SetupReceiver">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        
+        <service android:name=".scheduler.TickService">
+        </service>
+
+        <receiver android:name=".scheduler.TickReceiver">
+        </receiver>
+                
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
