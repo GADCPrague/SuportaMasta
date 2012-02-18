@@ -2,6 +2,8 @@ package cz.adevcamp.lsd.scheduler;
 
 import java.util.Date;
 
+import cz.adevcamp.lsd.MainActivity;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -30,8 +32,21 @@ public class TickService extends Service {
 		
 		//TODO: sem pridat tahani
 		
+		//NOTE: notifikace zmen
+		notifyChange();
 		
 		return Service.START_NOT_STICKY;
+	}
+	
+	/**
+	 * Notifikace widgetu a aktivity
+	 */
+	private void notifyChange(){
+//		Intent notifyChanged = new Intent(getBaseContext(), MainActivity.class);
+//		startService(notifyChanged);
+		//TODO: dodelat pro widget
+//		notifyChanged = new Intent(getBaseContext(), MainWidget.class);
+//		startService(notifyChanged);
 	}
 
 
