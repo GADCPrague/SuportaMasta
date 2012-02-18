@@ -19,6 +19,17 @@ public enum ScheduleInterval {
 		return d;
 	}
 	
+	public static ScheduleInterval getFromString(String intervalName){
+		
+		if (intervalName.toLowerCase() == "morning"){
+			return Morning;
+		}
+		
+		//TODO: vyhazovat vyjimku - kdyz tak osetrit
+		
+		return Evening;
+	}
+	
 	/**
 	 * Cas, od ktereho je dany interval platny pro zobrazeni jako prvni v poradi
 	 */
