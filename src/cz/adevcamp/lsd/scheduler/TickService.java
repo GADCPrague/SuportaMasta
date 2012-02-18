@@ -14,7 +14,7 @@ import android.util.Log;
  */
 public class TickService extends Service {
 	/**
-	 * Jmeno logovaciho tagu pro TickServicu
+	 * Jmeno logovaciho tagu pro TickServicus
 	 */
 	public static final String LOG_TAG = "SmTickService";
 

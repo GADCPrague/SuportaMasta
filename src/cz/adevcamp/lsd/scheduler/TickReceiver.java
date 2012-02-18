@@ -18,5 +18,4 @@ public class TickReceiver extends BroadcastReceiver {
 		Intent eventService = new Intent(ctx, TickService.class);
 		ctx.startService(eventService);
 	}
-
 }
