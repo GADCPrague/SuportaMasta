@@ -21,7 +21,7 @@ public enum ScheduleInterval {
 	
 	public static ScheduleInterval getFromString(String intervalName){
 		
-		if (intervalName.toLowerCase() == "morning"){
+		if (intervalName.toLowerCase().compareTo("morning") == 0){
 			return Morning;
 		}
 		
