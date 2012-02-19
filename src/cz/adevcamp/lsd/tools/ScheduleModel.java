@@ -25,6 +25,9 @@ public class ScheduleModel {
 	private static final int DATABASE_VERSION = 5;
 
 	public static final String SCHEDULE_TABLE_NAME = "schedule";
+	public static final String DATE_COLUMN_SCHEDULE_TABLE_NAME = "date";
+	public static final String INTERVAL_COLUMN_SCHEDULE_TABLE_NAME = "interval";
+	public static final String NAME_COLUMN_SCHEDULE_TABLE_NAME = "name";
 
 	private Context context;
 	private Boolean opened;
@@ -66,8 +69,8 @@ public class ScheduleModel {
 		Log.d(LOG_TAG, "Getting schedule");
 
 		Cursor cur = db.rawQuery("SELECT date, interval, name" +
-				"FROM " + SCHEDULE_TABLE_NAME +
-				"ORDER BY date, interval", null);
+				" FROM " + SCHEDULE_TABLE_NAME +
+				" ORDER BY date, interval", null);
 		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
 
 		cur.moveToFirst();
@@ -108,5 +111,29 @@ public class ScheduleModel {
 			db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE_NAME);
 			this.onCreate(db);
 		}
+	}
+
+	public ArrayList<ScheduleItem> getScheduleFromToday() {
+		Log.d(LOG_TAG, "Getting schedule from");
+		
+		Date fromToday = new Date();
+		fromToday.setHours(0);
+		fromToday.setMinutes(0);
+		fromToday.setSeconds(0);
+
+		Cursor cur = db.rawQuery("SELECT date, interval, name" +
+				" FROM " + SCHEDULE_TABLE_NAME +
+				" WHERE date > " + fromToday.getTime() +
+				" ORDER BY date, interval", null);
+		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
+
+		cur.moveToFirst();
+		while (cur.isAfterLast() == false) {
+			items.add(new ScheduleItem(new Date(cur.getLong(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
+			cur.moveToNext();
+		}
+		cur.close();
+
+		return items;
 	}
 }

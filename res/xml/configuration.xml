@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_name" >
+
+    <PreferenceCategory android:title="@string/conf_user" >
+        <EditTextPreference
+            android:key="name"
+            android:title="@string/conf_name_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/conf_actualization" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autoActualization"
+            android:title="@string/conf_refresh_interval_title" />
+
+        <ListPreference
+            android:defaultValue="60"
+            android:entries="@array/conf_actualization_interval_titles"
+            android:entryValues="@array/conf_actualization_interval_values"
+            android:key="actualizationInterval"
+            android:title="@string/conf_refresh_interval_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/conf_alarm_morning" >
+        <ListPreference
+            android:defaultValue="alarm"
+            android:entries="@array/conf_alarm_type_titles"
+            android:entryValues="@array/conf_alarm_type_values"
+            android:key="alarmTypeMorning"
+            android:title="@string/conf_alarm_type_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/conf_alarm_evening" >
+        <ListPreference
+            android:defaultValue="notify"
+            android:entries="@array/conf_alarm_type_titles"
+            android:entryValues="@array/conf_alarm_type_values"
+            android:key="alarmTypeEvening"
+            android:title="@string/conf_alarm_type_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

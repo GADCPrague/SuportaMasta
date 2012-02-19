@@ -59,7 +59,7 @@ public class ScheduleItem {
 			return null;
 		}
 	}
-
+	
 	public void setDate(String date) {
 		this.date = date;
 	}

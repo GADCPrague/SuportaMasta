@@ -3,6 +3,15 @@
 
     <string name="app_name">Saporta\'Masta</string>
     <string name="tab_support_header">Saporty</string>
+    <string name="tab_support_last_actualization">Poslední aktualizace:</string>
+    <string name="tab_support_last_actualization_unfilled">---</string>
+    <string name="tab_support_item_date_default_value">02-12</string>
+    <string name="tab_support_item_interval_default_value">ráno</string>
+    <string name="tab_support_item_name_default_value">Kovi</string>
+    
+    <string name="interval_morning">ráno</string>
+    <string name="interval_evening">večer</string>
+    
     <string name="tab_logs_header">Logy</string>
     <string name="tab_config_header">Konfig</string>
 
