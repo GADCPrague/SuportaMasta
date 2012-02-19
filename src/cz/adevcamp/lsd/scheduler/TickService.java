@@ -55,6 +55,8 @@ public class TickService extends Service {
     private class AsyncJsonLoader extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... v) {
+			ScheduleModel model = null;
+			
 			try {
 				Log.d(LOG_TAG, "Downloading schedules");
 
@@ -66,12 +68,15 @@ public class TickService extends Service {
 		        ScheduleResponse response = gson.fromJson(json, ScheduleResponse.class);
 
 		        // Put schedule into database.
-		        ScheduleModel model = new ScheduleModel(getApplicationContext());
+		        model = new ScheduleModel(getApplicationContext());
 		        model.openDatabase();
 		        model.insertSchedule(response.getItems());
 		        model.closeDatabase();
 
 			} catch (Exception e) {
+				if (model != null)
+					model.closeDatabase();
+				
 				Log.e(LOG_TAG, "error loading JSON: schedule");
 				Http.logError(e);
 			}

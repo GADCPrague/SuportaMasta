@@ -22,11 +22,12 @@ public class ScheduleModel {
 	public static final String LOG_TAG = "SM-Model";
 
 	private static final String DATABASE_NAME = "SaportaMasta.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	public static final String SCHEDULE_TABLE_NAME = "schedule";
 
 	private Context context;
+	private Boolean opened;
 	public SQLiteDatabase db;
 
 	public ScheduleModel(Context context) {
@@ -39,10 +40,16 @@ public class ScheduleModel {
 		OpenHelper openHelper = new OpenHelper(this.context);
 		db = openHelper.getWritableDatabase();
 		db.setLocale(new Locale("cs", "CZ"));
+		
+		this.opened = true;
 	}
 	
 	public void closeDatabase() {
+		if (!this.opened)
+			return;
+		
 		db.close();
+		this.opened = false;
 	}
 
 	// Insert whole schedule.
@@ -50,8 +57,8 @@ public class ScheduleModel {
 		Log.d(LOG_TAG, "Inserting schedule");
 
 		for (ScheduleItem item: items) {
-			db.execSQL("INSERT OR REPLACE INTO " + SCHEDULE_TABLE_NAME + " VALUES ('" +
-					item.getDate() + "', '" +
+			db.execSQL("INSERT OR REPLACE INTO " + SCHEDULE_TABLE_NAME + " VALUES (" +
+					item.getDate().getTime() + ", '" +
 					item.getInterval().toInt() + "', '" +
 					item.getName() + "')");
 		}
@@ -68,7 +75,7 @@ public class ScheduleModel {
 
 		cur.moveToFirst();
 		while (cur.isAfterLast() == false) {
-			items.add(new ScheduleItem(new Date(cur.getString(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
+			items.add(new ScheduleItem(new Date(cur.getLong(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
 			cur.moveToNext();
 		}
 		cur.close();
@@ -89,7 +96,7 @@ public class ScheduleModel {
 		public void onCreate(SQLiteDatabase db) {
 			Log.d(LOG_TAG, "Creating tables");
 			db.execSQL("CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" +
-					"date DATE NOL NULL, " +
+					"date LONG NOL NULL, " +		// date as long
 					"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
 					"name TEXT NOT NULL," +
 					"PRIMARY KEY (date, interval)" +
