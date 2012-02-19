@@ -49,7 +49,7 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
         intent = new Intent().setClass(this, SupportsActivity.class);
-        spec = tabHost.newTabSpec("configs").setIndicator(res.getString(R.string.tab_support_header),
+        spec = tabHost.newTabSpec("configs").setIndicator(res.getString(R.string.tab_config_header),
                           res.getDrawable(R.drawable.ic_launcher))
                       .setContent(intent);
         tabHost.addTab(spec);
