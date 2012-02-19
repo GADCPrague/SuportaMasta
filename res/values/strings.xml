@@ -8,6 +8,9 @@
     <string name="tab_support_item_date_default_value">02-12</string>
     <string name="tab_support_item_interval_default_value">ráno</string>
     <string name="tab_support_item_name_default_value">Kovi</string>
+    <string name="tab_support_menu_refresh">Akualizovat</string>
+    <string name="tab_support_menu_filter">Filtrovat</string>
+    <string name="tab_support_menu_unfilter">Zrušit filtr</string>
     
     <string name="interval_morning">ráno</string>
     <string name="interval_evening">večer</string>
