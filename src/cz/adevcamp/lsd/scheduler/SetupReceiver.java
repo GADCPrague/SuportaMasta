@@ -19,7 +19,7 @@ public class SetupReceiver extends BroadcastReceiver {
 	/**
 	 * Tikani po x sekundach
 	 */
-	private static final int TICK_INTERVAL_IN_SEC = 20;
+	private static final int TICK_INTERVAL_IN_SEC = 5;
 	
 	private static final int EXEC_INTERVAL = 20 * 1000;
 
