@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import cz.adevcamp.lsd.bo.ScheduleItem;
-import cz.adevcamp.lsd.scheduler.TickService;
-import cz.adevcamp.lsd.tools.ScheduleModel;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,12 +13,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import cz.adevcamp.lsd.bo.ScheduleItem;
+import cz.adevcamp.lsd.scheduler.TickService;
+import cz.adevcamp.lsd.tools.ScheduleModel;
+
 
 /**
  * Zobrazeni polozek v seznam supportu
@@ -35,6 +39,38 @@ public class SupportsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.supports_list);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.supports_list_menu, menu);
+		return true;
+	}
+
+	boolean isFiltering = false;
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			// TODO: force reload
+			return true;
+		case R.id.filter:
+			if (isFiltering) {
+				isFiltering = false;
+				item.setIcon(R.drawable.ic_launcher);
+				item.setTitle(R.string.tab_support_menu_filter);
+			} else {
+				isFiltering = true;
+				item.setIcon(R.drawable.ic_launcher);
+				item.setTitle(R.string.tab_support_menu_unfilter);
+			}
+//			changeAdapterFilter(isFiltering);//TODO:dodelat
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private SupportArrayAdapter adapter;
@@ -51,6 +87,16 @@ public class SupportsActivity extends Activity {
 			adapter.clear();
 			for (ScheduleItem item : values) {
 				adapter.add(item);
+			}
+		}
+	}
+
+	private void changeAdapterFilter(boolean addFilter) {
+		if (adapter != null) {
+			if (addFilter) {
+				adapter.getFilter().filter(null);
+			} else {
+				adapter.getFilter().filter("kovi");
 			}
 		}
 	}
@@ -119,7 +165,6 @@ public class SupportsActivity extends Activity {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			Log.d(MainActivity.LOG_TAG, "Dostal jsem notifikaci od servisy");
-
 			bindData();
 		}
 	}
@@ -134,13 +179,15 @@ public class SupportsActivity extends Activity {
 
 		private final Context context;
 		private final List<ScheduleItem> schedules;
+//		private List<ScheduleItem> filteredSchedules;
 
 		private final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd", Locale.US); // tohle fakt blbost, ale nelze to udelat static
 
 		/**
 		 * Podrzi si obsah view a neprepina ho porad
+		 * 
 		 * @author kovi
-		 *
+		 * 
 		 */
 		class SupportViewHolder {
 			public ImageView image;
@@ -153,7 +200,22 @@ public class SupportsActivity extends Activity {
 			super(context, R.layout.supports_list_item_detail, schedules);
 			this.context = context;
 			this.schedules = schedules;
+//			this.schedules = new ArrayList<ScheduleItem>();
+//			schedules.addAll(schedules);
+//			this.filteredSchedules = new ArrayList<ScheduleItem>();
+//			filteredSchedules.addAll(schedules);
 		}
+
+//		@Override
+//		public ScheduleItem getItem(int position) {
+//			if (filteredSchedules != null) {
+//				if (filteredSchedules.size() > position) {
+//					return filteredSchedules.get(position);
+//				}
+//			}
+//
+//			return null;
+//		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -170,13 +232,72 @@ public class SupportsActivity extends Activity {
 				rowView.setTag(viewHolder);
 			}
 
-			SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
-			holder.image.setImageResource(R.drawable.ic_launcher);// TODO: ikonku podle jmena
-			holder.dateView.setText(this.sdf.format(schedules.get(position).getDate()));
-			holder.intervalView.setText(schedules.get(position).getInterval().toText(getResources()));
+			// ScheduleItem item = filteredSchedules.get(position);
+			ScheduleItem item = schedules.get(position);
 
-			holder.nameView.setText(schedules.get(position).getName().toString());
+			if (item != null) {
+				SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
+				holder.image.setImageResource(R.drawable.ic_launcher);// TODO: ikonku podle jmena
+				holder.dateView.setText(this.sdf.format(item.getDate()));
+				holder.intervalView.setText(item.getInterval().toText(getResources()));
+
+				holder.nameView.setText(item.getName().toString());
+			}
 			return rowView;
 		}
+
+//		private SupportsNameFilter filter;
+//
+//		@Override
+//		public Filter getFilter() {
+//			if (filter == null) {
+//				filter = new SupportsNameFilter();
+//			}
+//			return filter;
+//		}
+
+//		private class SupportsNameFilter extends Filter {
+//
+//			@Override
+//			protected FilterResults performFiltering(CharSequence constraint) {
+//
+//				FilterResults result = new FilterResults();
+//				if (constraint != null && constraint.toString().length() > 0) {
+//					ArrayList<ScheduleItem> filteredItems = new ArrayList<ScheduleItem>();
+//
+//					for (int i = 0, l = schedules.size(); i < l; i++) {
+//						ScheduleItem m = schedules.get(i);
+//						if (m.getName().toLowerCase().contains(constraint)) {
+//							filteredItems.add(m);
+//						}
+//					}
+//					result.count = filteredItems.size();
+//					result.values = filteredItems;
+//				} else {
+//					synchronized (this) {
+//						result.values = schedules;
+//						result.count = schedules.size();
+//					}
+//				}
+//				return result;
+//			}
+//
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			protected void publishResults(CharSequence constraint, FilterResults results) {
+//
+//				filteredSchedules = (ArrayList<ScheduleItem>) results.values;
+//				clear();
+//				if (filteredSchedules != null) {
+//					for (int i = 0, l = filteredSchedules.size(); i < l; i++) {
+//						add(filteredSchedules.get(i));
+//					}
+//				}
+//
+//				notifyDataSetChanged();
+//
+//				// notifyDataSetInvalidated();
+//			}
+//		}
 	}
 }

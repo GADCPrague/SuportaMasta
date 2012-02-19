@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="conf_user">Uživatel</string>
+	<string name="conf_name_title">Jméno</string>
+	
+	<string name="conf_actualization">Aktualizace</string>
+	<string name="conf_auto_actualization_title">Aktualizovat automaticky</string>
+	
+	<string name="conf_refresh_interval_title">Interval obnovení</string>
+		<string-array name="conf_actualization_interval_values">
+		<item >15</item>
+		<item >30</item>
+		<item >60</item>
+		<item >120</item>
+	</string-array>
+	<string-array name="conf_actualization_interval_titles">
+		<item >15 minut</item>
+		<item >30 minut</item>
+		<item >1 hodina</item>
+		<item >2 hodiny</item>
+	</string-array>
+
+	<string name="conf_alarm_morning">Upozornění - ráno</string>
+	<string name="conf_alarm_evening">Upozornění - večer</string>
+	<string name="conf_alarm_type_title">Typ upozornění</string>
+	<string-array name="conf_alarm_type_values">
+		<item >alarm</item>
+		<item >notify</item>
+		<item >none</item>
+	</string-array>
+	<string-array name="conf_alarm_type_titles">
+		<item >Alarm</item>
+		<item >Notifikace</item>
+		<item >Vypnuto</item>
+	</string-array>
+</resources>
