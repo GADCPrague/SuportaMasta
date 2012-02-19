@@ -25,24 +25,24 @@ public class ScheduleModel {
 	private static final int DATABASE_VERSION = 4;
 
 	public static final String SCHEDULE_TABLE_NAME = "schedule";
-	private static final String SCHEDULE_TABLE_CREATE = "CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" +
-				"date DATE NOL NULL, " +
-				"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
-				"name TEXT NOT NULL," +
-				"PRIMARY KEY (date, interval)" +
-				");";
 
 	private Context context;
 	public SQLiteDatabase db;
 
 	public ScheduleModel(Context context) {
 		this.context = context;
-
+	}
+	
+	public void openDatabase() {
 		Log.d(LOG_TAG, "Opening db helper");
 
 		OpenHelper openHelper = new OpenHelper(this.context);
 		db = openHelper.getWritableDatabase();
 		db.setLocale(new Locale("cs", "CZ"));
+	}
+	
+	public void closeDatabase() {
+		db.close();
 	}
 
 	// Insert whole schedule.
@@ -88,7 +88,12 @@ public class ScheduleModel {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			Log.d(LOG_TAG, "Creating tables");
-			db.execSQL(SCHEDULE_TABLE_CREATE);
+			db.execSQL("CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" +
+					"date DATE NOL NULL, " +
+					"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
+					"name TEXT NOT NULL," +
+					"PRIMARY KEY (date, interval)" +
+					");");
 		}
 
 		// What to do when DATABASE_VERSION changes.

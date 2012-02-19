@@ -56,16 +56,20 @@ public class TickService extends Service {
 		@Override
 		protected Void doInBackground(Void... v) {
 			try {
-				Log.d(LOG_TAG, "downloading schedules");
+				Log.d(LOG_TAG, "Downloading schedules");
 
-				// Download and parse JSON.
-				Gson gson = new Gson();
+				// Download schedule.
 		        String json = Http.downloadText(API_URL + "schedule");
+		        
+		        // Parse JSON.
+		        Gson gson = new Gson();
 		        ScheduleResponse response = gson.fromJson(json, ScheduleResponse.class);
 
 		        // Put schedule into database.
 		        ScheduleModel model = new ScheduleModel(getApplicationContext());
+		        model.openDatabase();
 		        model.insertSchedule(response.getItems());
+		        model.closeDatabase();
 
 			} catch (Exception e) {
 				Log.e(LOG_TAG, "error loading JSON: schedule");
