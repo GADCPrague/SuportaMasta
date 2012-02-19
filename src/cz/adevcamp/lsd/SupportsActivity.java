@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import cz.adevcamp.lsd.bo.ScheduleItem;
-import cz.adevcamp.lsd.scheduler.TickService;
-import cz.adevcamp.lsd.tools.ScheduleModel;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,10 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import cz.adevcamp.lsd.bo.ScheduleItem;
+import cz.adevcamp.lsd.scheduler.TickService;
+import cz.adevcamp.lsd.tools.ScheduleModel;
+
 
 /**
  * Zobrazeni polozek v seznam supportu
@@ -165,7 +165,6 @@ public class SupportsActivity extends Activity {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			Log.d(MainActivity.LOG_TAG, "Dostal jsem notifikaci od servisy");
-
 			bindData();
 		}
 	}
