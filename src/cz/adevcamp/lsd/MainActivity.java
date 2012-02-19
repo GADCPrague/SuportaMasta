@@ -58,7 +58,7 @@ public class MainActivity extends TabActivity {
                       .setContent(intent);
         tabHost.addTab(spec);
 
-        intent = new Intent().setClass(this, SupportsActivity.class);
+        intent = new Intent().setClass(this, ConfigurationActivity.class);
         spec = tabHost.newTabSpec("configs").setIndicator(res.getString(R.string.tab_config_header),
                           res.getDrawable(R.drawable.main_tab_config))
                       .setContent(intent);

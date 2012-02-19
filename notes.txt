@@ -7,3 +7,6 @@ Jak si pripravit ikonky pro Taby:
 Preferences:
 	http://developer.android.com/reference/android/content/SharedPreferences.html
 	http://developer.android.com/reference/android/preference/PreferenceScreen.html
+	Ak by bolo potreba implementivat do preferences vyber casu (nizsie na stranke je este upravena verzia):
+	http://www.twodee.org/blog/?p=1037
+	
