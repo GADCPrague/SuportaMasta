@@ -60,13 +60,13 @@ public class SupportsActivity extends Activity {
 			if (isFiltering) {
 				isFiltering = false;
 				item.setIcon(R.drawable.ic_launcher);
-				item.setTitle(R.string.tab_support_menu_unfilter);
+				item.setTitle(R.string.tab_support_menu_filter);
 			} else {
 				isFiltering = true;
 				item.setIcon(R.drawable.ic_launcher);
-				item.setTitle(R.string.tab_support_menu_filter);
+				item.setTitle(R.string.tab_support_menu_unfilter);
 			}
-			changeAdapterFilter(isFiltering);
+//			changeAdapterFilter(isFiltering); TODO: dodelat
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -202,13 +202,19 @@ public class SupportsActivity extends Activity {
 			this.context = context;
 			this.schedules = new ArrayList<ScheduleItem>();
 			schedules.addAll(schedules);
-	        this.filteredSchedules = new ArrayList<ScheduleItem>();
-	        filteredSchedules.addAll(schedules);
+			this.filteredSchedules = new ArrayList<ScheduleItem>();
+			filteredSchedules.addAll(schedules);
 		}
-		
+
 		@Override
 		public ScheduleItem getItem(int position) {
-			return filteredSchedules.get(position);
+			if (filteredSchedules != null) {
+				if (filteredSchedules.size() > position) {
+					return filteredSchedules.get(position);
+				}
+			}
+
+			return null;
 		}
 
 		@Override
@@ -226,15 +232,17 @@ public class SupportsActivity extends Activity {
 				rowView.setTag(viewHolder);
 			}
 
-//			ScheduleItem item = filteredSchedules.get(position);
+			// ScheduleItem item = filteredSchedules.get(position);
 			ScheduleItem item = getItem(position);
-			
-			SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
-			holder.image.setImageResource(R.drawable.ic_launcher);// TODO: ikonku podle jmena
-			holder.dateView.setText(this.sdf.format(item.getDate()));
-			holder.intervalView.setText(item.getInterval().toText(getResources()));
 
-			holder.nameView.setText(item.getName().toString());
+			if (item != null) {
+				SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
+				holder.image.setImageResource(R.drawable.ic_launcher);// TODO: ikonku podle jmena
+				holder.dateView.setText(this.sdf.format(item.getDate()));
+				holder.intervalView.setText(item.getInterval().toText(getResources()));
+
+				holder.nameView.setText(item.getName().toString());
+			}
 			return rowView;
 		}
 
@@ -247,8 +255,7 @@ public class SupportsActivity extends Activity {
 			}
 			return filter;
 		}
-		
-		
+
 		private class SupportsNameFilter extends Filter {
 
 			@Override
@@ -260,8 +267,9 @@ public class SupportsActivity extends Activity {
 
 					for (int i = 0, l = schedules.size(); i < l; i++) {
 						ScheduleItem m = schedules.get(i);
-						if (m.getName().toLowerCase().equals(constraint))
+						if (m.getName().toLowerCase().contains(constraint)) {
 							filteredItems.add(m);
+						}
 					}
 					result.count = filteredItems.size();
 					result.values = filteredItems;
@@ -280,13 +288,15 @@ public class SupportsActivity extends Activity {
 
 				filteredSchedules = (ArrayList<ScheduleItem>) results.values;
 				clear();
-				for (int i = 0, l = filteredSchedules.size(); i < l; i++){
-					add(filteredSchedules.get(i));
+				if (filteredSchedules != null) {
+					for (int i = 0, l = filteredSchedules.size(); i < l; i++) {
+						add(filteredSchedules.get(i));
+					}
 				}
-				
+
 				notifyDataSetChanged();
-				
-				//notifyDataSetInvalidated();
+
+				// notifyDataSetInvalidated();
 			}
 		}
 	}
