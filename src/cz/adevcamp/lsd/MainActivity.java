@@ -1,13 +1,9 @@
 package cz.adevcamp.lsd;
 
 import android.app.TabActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TabHost;
 import cz.adevcamp.lsd.scheduler.TickService;
 
@@ -21,20 +17,6 @@ public class MainActivity extends TabActivity {
         setContentView(R.layout.main);
         
         setTabContext();
-    }
-    
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	
-    	startListeningToBroadcasts();
-    }
-    
-    @Override
-    protected void onPause() {
-    	super.onPause();
-    	
-    	stopListeningToBroadcasts();
     }
     
     private void setTabContext() {
@@ -67,20 +49,6 @@ public class MainActivity extends TabActivity {
         tabHost.setCurrentTab(0);
 	}
 
-    private MainActivityTickBroadcastServiceReceiver broadcastReceiver;
-	private static final IntentFilter notifyFilter = new IntentFilter(TickService.NOTIFICATION_INTENT_STRING);
-    private void startListeningToBroadcasts() {
-    	if (broadcastReceiver == null){
-    		broadcastReceiver = new MainActivityTickBroadcastServiceReceiver();
-    	}
-    	registerReceiver(broadcastReceiver, notifyFilter);
-	}
-    private void stopListeningToBroadcasts() {
-    	if (broadcastReceiver != null){
-    		unregisterReceiver(broadcastReceiver);
-    	}
-	}
-
 	/**
      * Po instalaci je treba jeste intentnout servicu, aby se spustila. Se spustenim zarizeni se spusti sama.
      */
@@ -89,13 +57,5 @@ public class MainActivity extends TabActivity {
         startService(bootTicking);    	
     }
 
-    private class MainActivityTickBroadcastServiceReceiver extends BroadcastReceiver{
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			Log.d(LOG_TAG, "Dostal jsem notifikaci od servisy");
-			
-			// TODO: prisla zmena, neco musim udelat.
-		}
-    }
+    
 }

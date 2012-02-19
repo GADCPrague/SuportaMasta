@@ -1,6 +1,8 @@
 package cz.adevcamp.lsd.bo;
 
 import java.util.Date;
+
+import android.content.res.Resources;
 /**
  * Informace, jestli se jedna o ranni, nebo vecerni support.
  *
@@ -51,5 +53,15 @@ public enum ScheduleInterval {
 
 	private void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
+	}
+	
+	public String toText(Resources res){
+		if (index == 0){
+			return res.getString(cz.adevcamp.lsd.R.string.interval_morning);
+		}
+
+		//TODO: vyhazovat vyjimku - kdyz tak osetrit
+		
+		return res.getString(cz.adevcamp.lsd.R.string.interval_evening);
 	}
 }
