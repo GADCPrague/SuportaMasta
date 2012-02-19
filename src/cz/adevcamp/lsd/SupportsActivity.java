@@ -66,7 +66,7 @@ public class SupportsActivity extends Activity {
 				item.setIcon(R.drawable.ic_launcher);
 				item.setTitle(R.string.tab_support_menu_unfilter);
 			}
-//			changeAdapterFilter(isFiltering); TODO: dodelat
+//			changeAdapterFilter(isFiltering);//TODO:dodelat
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -180,7 +180,7 @@ public class SupportsActivity extends Activity {
 
 		private final Context context;
 		private final List<ScheduleItem> schedules;
-		private List<ScheduleItem> filteredSchedules;
+//		private List<ScheduleItem> filteredSchedules;
 
 		private final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd", Locale.US); // tohle fakt blbost, ale nelze to udelat static
 
@@ -200,22 +200,23 @@ public class SupportsActivity extends Activity {
 		public SupportArrayAdapter(Context context, ArrayList<ScheduleItem> schedules) {
 			super(context, R.layout.supports_list_item_detail, schedules);
 			this.context = context;
-			this.schedules = new ArrayList<ScheduleItem>();
-			schedules.addAll(schedules);
-			this.filteredSchedules = new ArrayList<ScheduleItem>();
-			filteredSchedules.addAll(schedules);
+			this.schedules = schedules;
+//			this.schedules = new ArrayList<ScheduleItem>();
+//			schedules.addAll(schedules);
+//			this.filteredSchedules = new ArrayList<ScheduleItem>();
+//			filteredSchedules.addAll(schedules);
 		}
 
-		@Override
-		public ScheduleItem getItem(int position) {
-			if (filteredSchedules != null) {
-				if (filteredSchedules.size() > position) {
-					return filteredSchedules.get(position);
-				}
-			}
-
-			return null;
-		}
+//		@Override
+//		public ScheduleItem getItem(int position) {
+//			if (filteredSchedules != null) {
+//				if (filteredSchedules.size() > position) {
+//					return filteredSchedules.get(position);
+//				}
+//			}
+//
+//			return null;
+//		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -233,7 +234,7 @@ public class SupportsActivity extends Activity {
 			}
 
 			// ScheduleItem item = filteredSchedules.get(position);
-			ScheduleItem item = getItem(position);
+			ScheduleItem item = schedules.get(position);
 
 			if (item != null) {
 				SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
@@ -246,58 +247,58 @@ public class SupportsActivity extends Activity {
 			return rowView;
 		}
 
-		private SupportsNameFilter filter;
+//		private SupportsNameFilter filter;
+//
+//		@Override
+//		public Filter getFilter() {
+//			if (filter == null) {
+//				filter = new SupportsNameFilter();
+//			}
+//			return filter;
+//		}
 
-		@Override
-		public Filter getFilter() {
-			if (filter == null) {
-				filter = new SupportsNameFilter();
-			}
-			return filter;
-		}
-
-		private class SupportsNameFilter extends Filter {
-
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint) {
-
-				FilterResults result = new FilterResults();
-				if (constraint != null && constraint.toString().length() > 0) {
-					ArrayList<ScheduleItem> filteredItems = new ArrayList<ScheduleItem>();
-
-					for (int i = 0, l = schedules.size(); i < l; i++) {
-						ScheduleItem m = schedules.get(i);
-						if (m.getName().toLowerCase().contains(constraint)) {
-							filteredItems.add(m);
-						}
-					}
-					result.count = filteredItems.size();
-					result.values = filteredItems;
-				} else {
-					synchronized (this) {
-						result.values = schedules;
-						result.count = schedules.size();
-					}
-				}
-				return result;
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint, FilterResults results) {
-
-				filteredSchedules = (ArrayList<ScheduleItem>) results.values;
-				clear();
-				if (filteredSchedules != null) {
-					for (int i = 0, l = filteredSchedules.size(); i < l; i++) {
-						add(filteredSchedules.get(i));
-					}
-				}
-
-				notifyDataSetChanged();
-
-				// notifyDataSetInvalidated();
-			}
-		}
+//		private class SupportsNameFilter extends Filter {
+//
+//			@Override
+//			protected FilterResults performFiltering(CharSequence constraint) {
+//
+//				FilterResults result = new FilterResults();
+//				if (constraint != null && constraint.toString().length() > 0) {
+//					ArrayList<ScheduleItem> filteredItems = new ArrayList<ScheduleItem>();
+//
+//					for (int i = 0, l = schedules.size(); i < l; i++) {
+//						ScheduleItem m = schedules.get(i);
+//						if (m.getName().toLowerCase().contains(constraint)) {
+//							filteredItems.add(m);
+//						}
+//					}
+//					result.count = filteredItems.size();
+//					result.values = filteredItems;
+//				} else {
+//					synchronized (this) {
+//						result.values = schedules;
+//						result.count = schedules.size();
+//					}
+//				}
+//				return result;
+//			}
+//
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			protected void publishResults(CharSequence constraint, FilterResults results) {
+//
+//				filteredSchedules = (ArrayList<ScheduleItem>) results.values;
+//				clear();
+//				if (filteredSchedules != null) {
+//					for (int i = 0, l = filteredSchedules.size(); i < l; i++) {
+//						add(filteredSchedules.get(i));
+//					}
+//				}
+//
+//				notifyDataSetChanged();
+//
+//				// notifyDataSetInvalidated();
+//			}
+//		}
 	}
 }
