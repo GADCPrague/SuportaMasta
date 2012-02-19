@@ -2,3 +2,5 @@ Puvodni prednaska:
 	http://speakerdeck.com/u/petrnohejl/p/jak-vyrobit-aplikaci-pro-android
 Jak pracovat s Intents:
 	http://www.slideshare.net/CodeAndroid/android-intent-intent-filter-broadcast-receivers
+Jak si pripravit ikonky pro Taby:
+	http://developer.android.com/resources/tutorials/views/hello-tabwidget.html

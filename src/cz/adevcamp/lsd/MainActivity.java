@@ -37,20 +37,19 @@ public class MainActivity extends TabActivity {
 
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("supports").setIndicator(res.getString(R.string.tab_support_header),
-                          res.getDrawable(R.drawable.ic_launcher))
+                          res.getDrawable(R.drawable.main_tab_supports))
                       .setContent(intent);
         tabHost.addTab(spec);
 
-        // Do the same for the other tabs
         intent = new Intent().setClass(this, LogsActivity.class);
         spec = tabHost.newTabSpec("logs").setIndicator(res.getString(R.string.tab_logs_header),
-                          res.getDrawable(R.drawable.ic_launcher))
+                          res.getDrawable(R.drawable.main_tab_logs))
                       .setContent(intent);
         tabHost.addTab(spec);
 
         intent = new Intent().setClass(this, SupportsActivity.class);
         spec = tabHost.newTabSpec("configs").setIndicator(res.getString(R.string.tab_config_header),
-                          res.getDrawable(R.drawable.ic_launcher))
+                          res.getDrawable(R.drawable.main_tab_config))
                       .setContent(intent);
         tabHost.addTab(spec);
 
