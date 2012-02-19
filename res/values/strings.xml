@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">Saporta'Masta</string>
+    <string name="app_name">Saporta\'Masta</string>
     
     <string name="tab_support_header">Saporty</string>
     <string name="tab_logs_header">Logy</string>

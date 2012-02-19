@@ -9,8 +9,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
 import com.google.gson.Gson;
 
@@ -37,9 +35,6 @@ public class TickService extends Service {
 		
 		// Stahne data na pozadi.
         new AsyncJsonLoader().execute();
-		
-		//NOTE: notifikace zmen
-		//notifyChange();
 		
 		return Service.START_NOT_STICKY;
 	}
