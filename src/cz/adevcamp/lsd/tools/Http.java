@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- *
+ * 
  * @author peter
  */
 public class Http {
@@ -58,8 +58,7 @@ public class Http {
 		return str;
 	}
 
-	private static InputStream openHttpConnection(String urlString) throws Exception
-	{
+	private static InputStream openHttpConnection(String urlString) throws Exception {
 		InputStream in = null;
 
 		try {
@@ -78,7 +77,7 @@ public class Http {
 			httpConn.setRequestProperty("Accept-Charset", "utf-8");
 			httpConn.setRequestProperty("Content-Type", "text/html; charset=utf-8");
 			httpConn.setRequestMethod("GET");
-			
+
 			Log.d(LOG_TAG, "Connecting");
 			httpConn.connect();
 

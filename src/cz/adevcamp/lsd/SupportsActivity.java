@@ -23,8 +23,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cz.adevcamp.lsd.bo.ScheduleItem;
+import cz.adevcamp.lsd.bo.ScheduleModel;
 import cz.adevcamp.lsd.scheduler.TickService;
-import cz.adevcamp.lsd.tools.ScheduleModel;
 
 
 /**
