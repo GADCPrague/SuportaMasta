@@ -47,6 +47,7 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
         tabHost.setCurrentTab(0);
+        tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
 	}
 
 	/**
