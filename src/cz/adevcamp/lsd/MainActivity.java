@@ -14,16 +14,27 @@ import cz.adevcamp.lsd.scheduler.TickService;
 public class MainActivity extends TabActivity {
 	public static final String LOG_TAG = "SM-MainActivity";
 	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startTickService();
-        startListeningToBroadcasts();
-        
         setContentView(R.layout.main);
         
         setTabContext();
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	
+    	startListeningToBroadcasts();
+    }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	
+    	stopListeningToBroadcasts();
     }
     
     private void setTabContext() {
@@ -56,10 +67,18 @@ public class MainActivity extends TabActivity {
         tabHost.setCurrentTab(0);
 	}
 
+    private MainActivityTickBroadcastServiceReceiver broadcastReceiver;
 	private static final IntentFilter notifyFilter = new IntentFilter(TickService.NOTIFICATION_INTENT_STRING);
     private void startListeningToBroadcasts() {
-    	MainActivityTickBroadcastServiceReceiver broadcastReceiver = new MainActivityTickBroadcastServiceReceiver(); 
+    	if (broadcastReceiver == null){
+    		broadcastReceiver = new MainActivityTickBroadcastServiceReceiver();
+    	}
     	registerReceiver(broadcastReceiver, notifyFilter);
+	}
+    private void stopListeningToBroadcasts() {
+    	if (broadcastReceiver != null){
+    		unregisterReceiver(broadcastReceiver);
+    	}
 	}
 
 	/**

@@ -4,3 +4,6 @@ Jak pracovat s Intents:
 	http://www.slideshare.net/CodeAndroid/android-intent-intent-filter-broadcast-receivers
 Jak si pripravit ikonky pro Taby:
 	http://developer.android.com/resources/tutorials/views/hello-tabwidget.html
+Preferences:
+	http://developer.android.com/reference/android/content/SharedPreferences.html
+	http://developer.android.com/reference/android/preference/PreferenceScreen.html
