@@ -16,9 +16,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +41,38 @@ public class SupportsActivity extends Activity {
 		setContentView(R.layout.supports_list);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.supports_list_menu, menu);
+		return true;
+	}
+
+	boolean isFiltering = false;
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			// TODO: force reload
+			return true;
+		case R.id.filter:
+			if (isFiltering) {
+				isFiltering = false;
+				item.setIcon(R.drawable.ic_launcher);
+				item.setTitle(R.string.tab_support_menu_unfilter);
+			} else {
+				isFiltering = true;
+				item.setIcon(R.drawable.ic_launcher);
+				item.setTitle(R.string.tab_support_menu_filter);
+			}
+			changeAdapterFilter(isFiltering);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	private SupportArrayAdapter adapter;
 
 	private void bindData() {
@@ -51,6 +87,16 @@ public class SupportsActivity extends Activity {
 			adapter.clear();
 			for (ScheduleItem item : values) {
 				adapter.add(item);
+			}
+		}
+	}
+
+	private void changeAdapterFilter(boolean addFilter) {
+		if (adapter != null) {
+			if (addFilter) {
+				adapter.getFilter().filter(null);
+			} else {
+				adapter.getFilter().filter("kovi");
 			}
 		}
 	}
@@ -134,13 +180,15 @@ public class SupportsActivity extends Activity {
 
 		private final Context context;
 		private final List<ScheduleItem> schedules;
+		private List<ScheduleItem> filteredSchedules;
 
 		private final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd", Locale.US); // tohle fakt blbost, ale nelze to udelat static
 
 		/**
 		 * Podrzi si obsah view a neprepina ho porad
+		 * 
 		 * @author kovi
-		 *
+		 * 
 		 */
 		class SupportViewHolder {
 			public ImageView image;
@@ -152,7 +200,15 @@ public class SupportsActivity extends Activity {
 		public SupportArrayAdapter(Context context, ArrayList<ScheduleItem> schedules) {
 			super(context, R.layout.supports_list_item_detail, schedules);
 			this.context = context;
-			this.schedules = schedules;
+			this.schedules = new ArrayList<ScheduleItem>();
+			schedules.addAll(schedules);
+	        this.filteredSchedules = new ArrayList<ScheduleItem>();
+	        filteredSchedules.addAll(schedules);
+		}
+		
+		@Override
+		public ScheduleItem getItem(int position) {
+			return filteredSchedules.get(position);
 		}
 
 		@Override
@@ -170,13 +226,68 @@ public class SupportsActivity extends Activity {
 				rowView.setTag(viewHolder);
 			}
 
+//			ScheduleItem item = filteredSchedules.get(position);
+			ScheduleItem item = getItem(position);
+			
 			SupportViewHolder holder = (SupportViewHolder) rowView.getTag();
 			holder.image.setImageResource(R.drawable.ic_launcher);// TODO: ikonku podle jmena
-			holder.dateView.setText(this.sdf.format(schedules.get(position).getDate()));
-			holder.intervalView.setText(schedules.get(position).getInterval().toText(getResources()));
+			holder.dateView.setText(this.sdf.format(item.getDate()));
+			holder.intervalView.setText(item.getInterval().toText(getResources()));
 
-			holder.nameView.setText(schedules.get(position).getName().toString());
+			holder.nameView.setText(item.getName().toString());
 			return rowView;
+		}
+
+		private SupportsNameFilter filter;
+
+		@Override
+		public Filter getFilter() {
+			if (filter == null) {
+				filter = new SupportsNameFilter();
+			}
+			return filter;
+		}
+		
+		
+		private class SupportsNameFilter extends Filter {
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+
+				FilterResults result = new FilterResults();
+				if (constraint != null && constraint.toString().length() > 0) {
+					ArrayList<ScheduleItem> filteredItems = new ArrayList<ScheduleItem>();
+
+					for (int i = 0, l = schedules.size(); i < l; i++) {
+						ScheduleItem m = schedules.get(i);
+						if (m.getName().toLowerCase().equals(constraint))
+							filteredItems.add(m);
+					}
+					result.count = filteredItems.size();
+					result.values = filteredItems;
+				} else {
+					synchronized (this) {
+						result.values = schedules;
+						result.count = schedules.size();
+					}
+				}
+				return result;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, FilterResults results) {
+
+				filteredSchedules = (ArrayList<ScheduleItem>) results.values;
+				clear();
+				for (int i = 0, l = filteredSchedules.size(); i < l; i++){
+					add(filteredSchedules.get(i));
+				}
+				
+				notifyDataSetChanged();
+				
+				//notifyDataSetInvalidated();
+			}
 		}
 	}
 }
