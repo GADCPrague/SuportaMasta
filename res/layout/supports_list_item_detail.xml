@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TODO: horizontal view -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="35px">
+
+    <ImageView
+        android:id="@+id/support_item_icon"
+        android:layout_width="22px"
+        android:layout_height="22px"
+        android:layout_marginLeft="4px"
+        android:layout_marginRight="10px"
+        android:src="@drawable/ic_launcher">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/lDate"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text="@string/tab_support_item_date_default_value"
+        android:width="50dip">
+    </TextView>
+
+    <TextView
+        android:id="@+id/lInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text="@string/tab_support_item_interval_default_value"
+        android:width="70dip">
+    </TextView>
+
+    <TextView
+        android:id="@+id/lName"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="@string/tab_support_item_name_default_value"
+        android:width="100dip">
+    </TextView>
+
+</LinearLayout>

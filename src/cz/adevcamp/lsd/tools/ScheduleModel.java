@@ -22,27 +22,37 @@ public class ScheduleModel {
 	public static final String LOG_TAG = "SM-Model";
 
 	private static final String DATABASE_NAME = "SaportaMasta.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	public static final String SCHEDULE_TABLE_NAME = "schedule";
-	private static final String SCHEDULE_TABLE_CREATE = "CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" +
-				"date DATE NOL NULL, " +
-				"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
-				"name TEXT NOT NULL," +
-				"PRIMARY KEY (date, interval)" +
-				");";
+	public static final String DATE_COLUMN_SCHEDULE_TABLE_NAME = "date";
+	public static final String INTERVAL_COLUMN_SCHEDULE_TABLE_NAME = "interval";
+	public static final String NAME_COLUMN_SCHEDULE_TABLE_NAME = "name";
 
 	private Context context;
+	private Boolean opened;
 	public SQLiteDatabase db;
 
 	public ScheduleModel(Context context) {
 		this.context = context;
-
+	}
+	
+	public void openDatabase() {
 		Log.d(LOG_TAG, "Opening db helper");
 
 		OpenHelper openHelper = new OpenHelper(this.context);
 		db = openHelper.getWritableDatabase();
 		db.setLocale(new Locale("cs", "CZ"));
+		
+		this.opened = true;
+	}
+	
+	public void closeDatabase() {
+		if (!this.opened)
+			return;
+		
+		db.close();
+		this.opened = false;
 	}
 
 	// Insert whole schedule.
@@ -50,8 +60,8 @@ public class ScheduleModel {
 		Log.d(LOG_TAG, "Inserting schedule");
 
 		for (ScheduleItem item: items) {
-			db.execSQL("INSERT OR REPLACE INTO " + SCHEDULE_TABLE_NAME + " VALUES ('" +
-					item.getDate() + "', '" +
+			db.execSQL("INSERT OR REPLACE INTO " + SCHEDULE_TABLE_NAME + " VALUES (" +
+					item.getDate().getTime() + ", '" +
 					item.getInterval().toInt() + "', '" +
 					item.getName() + "')");
 		}
@@ -62,13 +72,13 @@ public class ScheduleModel {
 		Log.d(LOG_TAG, "Getting schedule");
 
 		Cursor cur = db.rawQuery("SELECT date, interval, name" +
-				"FROM " + SCHEDULE_TABLE_NAME +
-				"ORDER BY date, interval", null);
+				" FROM " + SCHEDULE_TABLE_NAME +
+				" ORDER BY date, interval", null);
 		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
 
 		cur.moveToFirst();
 		while (cur.isAfterLast() == false) {
-			items.add(new ScheduleItem(new Date(cur.getString(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
+			items.add(new ScheduleItem(new Date(cur.getLong(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
 			cur.moveToNext();
 		}
 		cur.close();
@@ -88,7 +98,12 @@ public class ScheduleModel {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			Log.d(LOG_TAG, "Creating tables");
-			db.execSQL(SCHEDULE_TABLE_CREATE);
+			db.execSQL("CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" +
+					"date LONG NOL NULL, " +		// date as long
+					"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
+					"name TEXT NOT NULL," +
+					"PRIMARY KEY (date, interval)" +
+					");");
 		}
 
 		// What to do when DATABASE_VERSION changes.
@@ -99,5 +114,29 @@ public class ScheduleModel {
 			db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE_NAME);
 			this.onCreate(db);
 		}
+	}
+
+	public ArrayList<ScheduleItem> getScheduleFromToday() {
+		Log.d(LOG_TAG, "Getting schedule from");
+		
+		Date fromToday = new Date();
+		fromToday.setHours(0);
+		fromToday.setMinutes(0);
+		fromToday.setSeconds(0);
+
+		Cursor cur = db.rawQuery("SELECT date, interval, name" +
+				" FROM " + SCHEDULE_TABLE_NAME +
+				" WHERE date > " + fromToday.getTime() +
+				" ORDER BY date, interval", null);
+		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
+
+		cur.moveToFirst();
+		while (cur.isAfterLast() == false) {
+			items.add(new ScheduleItem(new Date(cur.getLong(0)), ScheduleInterval.getFromInt(cur.getInt(1)), cur.getString(2)));
+			cur.moveToNext();
+		}
+		cur.close();
+
+		return items;
 	}
 }

@@ -1,26 +1,19 @@
 package cz.adevcamp.lsd;
 
 import android.app.TabActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TabHost;
 import cz.adevcamp.lsd.scheduler.TickService;
 
 public class MainActivity extends TabActivity {
 	public static final String LOG_TAG = "SM-MainActivity";
 	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startTickService();
-        startListeningToBroadcasts();
-        
         setContentView(R.layout.main);
         
         setTabContext();
@@ -54,12 +47,7 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
         tabHost.setCurrentTab(0);
-	}
-
-	private static final IntentFilter notifyFilter = new IntentFilter(TickService.NOTIFICATION_INTENT_STRING);
-    private void startListeningToBroadcasts() {
-    	MainActivityTickBroadcastServiceReceiver broadcastReceiver = new MainActivityTickBroadcastServiceReceiver(); 
-    	registerReceiver(broadcastReceiver, notifyFilter);
+        tabHost.getTabWidget().getChildTabViewAt(1).setEnabled(false);
 	}
 
 	/**
@@ -70,13 +58,5 @@ public class MainActivity extends TabActivity {
         startService(bootTicking);    	
     }
 
-    private class MainActivityTickBroadcastServiceReceiver extends BroadcastReceiver{
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			Log.d(LOG_TAG, "Dostal jsem notifikaci od servisy");
-			
-			// TODO: prisla zmena, neco musim udelat.
-		}
-    }
+    
 }

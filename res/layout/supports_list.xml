@@ -3,6 +3,31 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5px">
+
+        <TextView
+            android:id="@+id/tvLastActualizationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_support_last_actualization" />
+
+        <!-- TODO: zde bude muset byt doplneni datumu a casu posledni aktualizace -->
+        <TextView
+            android:id="@+id/tvLastActualizationDateTimeInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_support_last_actualization_unfilled" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvActualizacion"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </ListView>
 
 </LinearLayout>
