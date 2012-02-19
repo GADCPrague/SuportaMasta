@@ -2,6 +2,8 @@ package cz.adevcamp.lsd.bo;
 
 import java.util.Date;
 
+import cz.adevcamp.lsd.Configuration;
+
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -32,27 +34,26 @@ public enum ScheduleInterval {
 
 		return Evening;
 	}
-	
+
 	public static ScheduleInterval getFromString(String interval) {
-		if ("morning".compareToIgnoreCase(interval) == 0){
+		if ("morning".compareToIgnoreCase(interval) == 0) {
 			return Morning;
 		}
-		
+
 		// TODO: vyhazovat vyjimku - kdyz tak osetrit
 
 		return Evening;
 	}
 
-
 	public Integer toInt() {
 		switch (this) {
-			case Morning:
-				return 0;
-			case Evening:
-				return 1;
+		case Morning:
+			return 0;
+		case Evening:
+			return 1;
 		}
 
-		Log.e(ScheduleItem.LOG_TAG, "toInt(); Missing ScheduleInterval: " + this);
+		Log.e(Configuration.LogTags.SCHEDULE_ITEM_TAG, "toInt(); Missing ScheduleInterval: " + this);
 		return null;
 	}
 
@@ -81,7 +82,7 @@ public enum ScheduleInterval {
 			return res.getString(cz.adevcamp.lsd.R.string.interval_evening);
 		}
 
-		Log.e(ScheduleItem.LOG_TAG, "toText(); Missing ScheduleInterval: " + this);
+		Log.e(Configuration.LogTags.SCHEDULE_ITEM_TAG, "toText(); Missing ScheduleInterval: " + this);
 		return null;
 	}
 }

@@ -14,6 +14,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cz.adevcamp.lsd.Configuration;
 import cz.adevcamp.lsd.bo.ScheduleItem;
 import cz.adevcamp.lsd.bo.ScheduleModel;
 import cz.adevcamp.lsd.gson.ScheduleDeserializer;
@@ -27,16 +28,12 @@ import cz.adevcamp.lsd.tools.Http;
  * 
  */
 public class TickService extends Service {
-	/**
-	 * Jmeno logovaciho tagu pro TickServicus
-	 */
-	public static final String LOG_TAG = "SM-TickService";
 
 	private static final LoaderType CURRENT_LOADER = LoaderType.Text;
 
 	@Override
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
-		Log.d(LOG_TAG, "event received in service: " + new Date().toString());
+		Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "event received in service: " + new Date().toString());
 
 //		CURRENT_LOADER.getNewAsynsLoader(this).execute();		
 		Random r = new Random();
@@ -87,7 +84,7 @@ public class TickService extends Service {
 				return s.new AsyncTextLoader();
 			}
 
-			Log.e(LOG_TAG, "getNewAsynsLoader(); Missing LoaderType: " + this);
+			Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "getNewAsynsLoader(); Missing LoaderType: " + this);
 			return null;
 		}
 	}
@@ -97,15 +94,13 @@ public class TickService extends Service {
 	 */
 	private class AsyncJsonLoader extends AsyncTask<Void, Void, ArrayList<ScheduleItem>> {
 
-		public static final String API_URL = "http://adevcamp.pematon.com/SaportaMasta/";
-
 		@Override
 		protected ArrayList<ScheduleItem> doInBackground(Void... v) {
 			try {
-				Log.d(LOG_TAG, "Downloading schedules");
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Downloading schedules");
 
 				// Download schedule.
-				String json = Http.downloadText(API_URL + "schedule");
+				String json = Http.downloadText(Configuration.DataSources.JSON_URL + "schedule");
 
 				// Parse JSON.
 				Gson gson = new GsonBuilder().registerTypeAdapter(ScheduleItem.class, new ScheduleDeserializer()).create();
@@ -114,7 +109,7 @@ public class TickService extends Service {
 				return response.getItems();
 
 			} catch (Exception e) {
-				Log.e(LOG_TAG, "error loading JSON: schedule");
+				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "error loading JSON: schedule");
 				Http.logError(e);
 			}
 
@@ -135,18 +130,16 @@ public class TickService extends Service {
 	 */
 	private class AsyncTextLoader extends AsyncTask<Void, Void, ArrayList<ScheduleItem>> {
 
-		public static final String API_URL = "http://dl.dropbox.com/u/1474328/Android/supporty.txt";
-
 		private final Pattern linesPattern = Pattern.compile("\n");
 		private final Pattern itemsPattern = Pattern.compile("\\s");
 
 		@Override
 		protected ArrayList<ScheduleItem> doInBackground(Void... params) {
 			try {
-				Log.d(LOG_TAG, "Downloading schedules");
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Downloading schedules");
 
 				// Download schedule.
-				String file = Http.downloadText(API_URL);
+				String file = Http.downloadText(Configuration.DataSources.TXT_URL);
 
 				ArrayList<ScheduleItem> schedules = new ArrayList<ScheduleItem>();
 				String[] items = linesPattern.split(file);
@@ -160,7 +153,7 @@ public class TickService extends Service {
 				return schedules;
 
 			} catch (Exception e) {
-				Log.e(LOG_TAG, "error parsing file");
+				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "error parsing file");
 				Http.logError(e);
 			}
 

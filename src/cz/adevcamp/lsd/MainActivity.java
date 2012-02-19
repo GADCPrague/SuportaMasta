@@ -8,7 +8,6 @@ import android.widget.TabHost;
 import cz.adevcamp.lsd.scheduler.TickService;
 
 public class MainActivity extends TabActivity {
-	public static final String LOG_TAG = "SM-MainActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

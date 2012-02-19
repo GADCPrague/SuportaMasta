@@ -2,6 +2,8 @@ package cz.adevcamp.lsd.scheduler;
 
 import java.util.Calendar;
 
+import cz.adevcamp.lsd.Configuration;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -25,7 +27,7 @@ public class SetupReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(final Context ctx, final Intent intent) {
-		Log.d(TickService.LOG_TAG, "SetupReceiver.onReceive() called");
+		Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "SetupReceiver.onReceive() called");
 		AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
 		Intent i = new Intent(ctx, TickReceiver.class); // explicit intent
 		PendingIntent intentExecuted = PendingIntent.getBroadcast(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);

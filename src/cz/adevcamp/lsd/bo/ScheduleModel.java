@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Date;
 
+import cz.adevcamp.lsd.Configuration;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,7 +35,7 @@ public class ScheduleModel {
 	}
 
 	public void openDatabase() {
-		Log.d(ScheduleItem.LOG_TAG, "Opening db helper");
+		Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Opening db helper");
 
 		OpenHelper openHelper = new OpenHelper(this.context);
 		db = openHelper.getWritableDatabase();
@@ -46,7 +48,7 @@ public class ScheduleModel {
 
 	// Insert whole schedule.
 	public void insertSchedule(ArrayList<ScheduleItem> items) {
-		Log.d(ScheduleItem.LOG_TAG, "Inserting schedule");
+		Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Inserting schedule");
 
 		if (items != null) {
 			for (ScheduleItem item : items) {
@@ -58,7 +60,7 @@ public class ScheduleModel {
 
 	// Get schedule.
 	public ArrayList<ScheduleItem> getSchedule() {
-		Log.d(ScheduleItem.LOG_TAG, "Getting schedule");
+		Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Getting schedule");
 
 		Cursor cur = db.rawQuery("SELECT date, interval, name" + " FROM " + SCHEDULE_TABLE_NAME + " ORDER BY date, interval", null);
 		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
@@ -84,7 +86,7 @@ public class ScheduleModel {
 		// What to do on first run.
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			Log.d(ScheduleItem.LOG_TAG, "Creating tables");
+			Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Creating tables");
 			db.execSQL("CREATE TABLE " + SCHEDULE_TABLE_NAME + " (" + "date LONG NOL NULL, " + // date as long
 					"interval INTEGER NOT NULL, " + // 0 - morning, 1 - evening
 					"name TEXT NOT NULL," + "PRIMARY KEY (date, interval)" + ");");
@@ -93,7 +95,7 @@ public class ScheduleModel {
 		// What to do when DATABASE_VERSION changes.
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.d(ScheduleItem.LOG_TAG, "Dropping tables");
+			Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Dropping tables");
 
 			db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE_NAME);
 			this.onCreate(db);
@@ -101,7 +103,7 @@ public class ScheduleModel {
 	}
 
 	public ArrayList<ScheduleItem> getScheduleFromToday() {
-		Log.d(ScheduleItem.LOG_TAG, "Getting schedule from");
+		Log.d(Configuration.LogTags.SCHEDULE_ITEM_TAG, "Getting schedule from");
 
 		Date fromToday = new Date();
 		fromToday.setHours(0);

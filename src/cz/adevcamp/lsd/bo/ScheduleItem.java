@@ -12,7 +12,6 @@ import java.util.Locale;
  * 
  */
 public class ScheduleItem {
-	public static final String LOG_TAG = "SM-ScheduleItem";
 
 	// jmeno supportujiciho
 	private String name;

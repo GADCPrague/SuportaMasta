@@ -10,6 +10,12 @@ import com.google.gson.JsonParseException;
 
 import cz.adevcamp.lsd.bo.ScheduleItem;
 
+/**
+ * Custom deserializace pro Json
+ * 
+ * @author kovi
+ *
+ */
 public class ScheduleDeserializer implements JsonDeserializer<ScheduleItem>{
 
 	public ScheduleItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -18,7 +24,6 @@ public class ScheduleDeserializer implements JsonDeserializer<ScheduleItem>{
 	    String date = jo.get("date").getAsString();
 	    Integer interval = jo.get("interval").getAsInt();
 
-	//Should be an appropriate constructor
 	    return new ScheduleItem(date, interval, name);
 	}
 

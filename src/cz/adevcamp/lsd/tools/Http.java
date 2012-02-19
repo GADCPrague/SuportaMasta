@@ -6,12 +6,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import cz.adevcamp.lsd.Configuration;
+
 /**
  * 
  * @author peter
  */
 public class Http {
-	public static final String LOG_TAG = "SM-Http";
 
 	public static String downloadText(String url) {
 		int BUFFER_SIZE = 2000;
@@ -28,7 +29,7 @@ public class Http {
 		if (in == null)
 			return "";
 
-		Log.d(LOG_TAG, "Reading stream");
+		Log.d(Configuration.LogTags.HTTP_TAG, "Reading stream");
 		InputStreamReader isr;
 		try {
 			isr = new InputStreamReader(in, "utf-8");
@@ -62,7 +63,7 @@ public class Http {
 		InputStream in = null;
 
 		try {
-			Log.d(LOG_TAG, "Opening connection");
+			Log.d(Configuration.LogTags.HTTP_TAG, "Opening connection");
 
 			URL url = new URL(urlString);
 			URLConnection conn = url.openConnection();
@@ -78,11 +79,11 @@ public class Http {
 			httpConn.setRequestProperty("Content-Type", "text/html; charset=utf-8");
 			httpConn.setRequestMethod("GET");
 
-			Log.d(LOG_TAG, "Connecting");
+			Log.d(Configuration.LogTags.HTTP_TAG, "Connecting");
 			httpConn.connect();
 
 			int response = httpConn.getResponseCode();
-			Log.d(LOG_TAG, "Response code: " + response);
+			Log.d(Configuration.LogTags.HTTP_TAG, "Response code: " + response);
 
 			if (response == HttpURLConnection.HTTP_OK) {
 				in = httpConn.getInputStream();
@@ -102,6 +103,6 @@ public class Http {
 		e.printStackTrace(pw);
 		String retValue = sw.toString();
 
-		Log.d(LOG_TAG, retValue);
+		Log.d(Configuration.LogTags.HTTP_TAG, retValue);
 	};
 }

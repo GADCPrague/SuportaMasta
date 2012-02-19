@@ -117,7 +117,7 @@ public class SupportsActivity extends Activity {
 
 			toReturn = new ArrayList<ScheduleItem>();
 
-			Log.e(MainActivity.LOG_TAG, "error loading data from DB");
+			Log.e(Configuration.LogTags.MAIN_TAG, "error loading data from DB");
 		}
 
 		return toReturn;
@@ -164,7 +164,7 @@ public class SupportsActivity extends Activity {
 
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			Log.d(MainActivity.LOG_TAG, "Dostal jsem notifikaci od servisy");
+			Log.d(Configuration.LogTags.MAIN_TAG, "Dostal jsem notifikaci od servisy");
 			bindData();
 		}
 	}
