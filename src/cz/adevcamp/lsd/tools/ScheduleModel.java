@@ -48,9 +48,6 @@ public class ScheduleModel {
 	}
 	
 	public void closeDatabase() {
-		if (!this.opened)
-			return;
-		
 		db.close();
 		this.opened = false;
 	}
