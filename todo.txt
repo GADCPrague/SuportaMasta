@@ -1,0 +1,40 @@
+Stahovani dat:
+	1. stahovani po intranetu: http://jcifs.samba.org/
+	2. stahovani z netu ze zaheslovaneho zdroje
+	3. stahovani z intranetu ze zaheslovaneho zdroje
+	4. co mam delat, kdyz je vysledek kolekce null? je to chyba? mam mazat?
+	5. optimalizace
+		-> vracet naparsovane data jenom dnes a novejsi
+		-> udelat merge dat
+			- update
+			- change
+			a jen tehdy vyvolat notifikaci
+	6. kdyz neni pripojeni k netu -> zacit reagovat na spusteni netu, nebo wifi,
+	   kdyz se wifi, nebo net aktivuje, tak se pokusit stahnout a prepnout se do
+	   stavu opetovneho stahovani
+	7. moznost vypnout automaticke stahovani
+	8. moznost vynutit stahovani rucne
+	9. vpn v Androidu 4.0
+
+Akce:
+	1. Zobrazeni dat:
+		-> filtrovani dat
+		-> zobrazeni den v tydnu
+		-> moznost zobrazit dnes, zitra, pozitri
+		-> zobrazit ikonku spojeneho kontaktu
+		-> ukazat, ze mam tc a muzu volat a posilat sms
+
+C#:
+	1. vytvorit apku/pridat do monitoringu kontrolu novosti na catservices a updatovat
+	   data na public server
+
+Design:
+	1. ikonky
+		- aplikace
+		- default na seznamu
+		- zalozky
+
+Konfigurace:
+	1. rozdelit na submenicka pro app, widget, stahovani,...
+
+Widget

@@ -29,43 +29,50 @@ import cz.adevcamp.lsd.tools.Http;
  */
 public class TickService extends Service {
 
-	private static final LoaderType CURRENT_LOADER = LoaderType.Text;
+	private static final LoaderType CURRENT_LOADER = LoaderType.TextHttp;
+
+	private final Random r = new Random();
 
 	@Override
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "event received in service: " + new Date().toString());
 
-//		CURRENT_LOADER.getNewAsynsLoader(this).execute();		
-		Random r = new Random();
-		if (r.nextBoolean()){
+		if (!Configuration.IS_TESTING) {
 			CURRENT_LOADER.getNewAsynsLoader(this).execute();
 		} else {
-			LoaderType.Json.getNewAsynsLoader(this).execute();	
+			int random = r.nextInt(3);
+			if (random == 0) {
+				LoaderType.TextHttp.getNewAsynsLoader(this).execute();
+			} else if (random == 1) {
+				LoaderType.Json.getNewAsynsLoader(this).execute();
+			} else {
+				LoaderType.TextIntranet.getNewAsynsLoader(this).execute();
+			}
 		}
 
 		return Service.START_NOT_STICKY;
 	}
-
-	public static final String NOTIFICATION_INTENT_STRING = "cz.adevcamp.lsd.scheduler.TickReceiver.NotifyChange";
 
 	/**
 	 * Notifikace widgetu a aktivity
 	 */
 	private void notifyChange() {
 
-		Intent notifyChanged = new Intent(NOTIFICATION_INTENT_STRING);
+		Intent notifyChanged = new Intent(Configuration.Intents.TICK_RECEIVER_NOTIFY_CHANGE);
 		sendBroadcast(notifyChanged);
 	}
 
 	private void updateDb(ArrayList<ScheduleItem> loadeditems) {
-		ScheduleModel model = null;
-		// Put schedule into database.
-		model = new ScheduleModel(getApplicationContext());
-		model.openDatabase();
-		model.insertSchedule(loadeditems);
-		model.closeDatabase();
+		if (loadeditems != null && !loadeditems.isEmpty()) {
+			ScheduleModel model = null;
+			// Put schedule into database.
+			model = new ScheduleModel(getApplicationContext());
+			model.openDatabase();
+			model.insertSchedule(loadeditems);
+			model.closeDatabase();
 
-		notifyChange();
+			notifyChange();
+		}
 	}
 
 	@Override
@@ -74,14 +81,16 @@ public class TickService extends Service {
 	}
 
 	private enum LoaderType {
-		Json, Text;
+		Json, TextHttp, TextIntranet;
 
 		public AsyncTask<Void, Void, ArrayList<ScheduleItem>> getNewAsynsLoader(TickService s) {
 			switch (this) {
 			case Json:
 				return s.new AsyncJsonLoader();
-			case Text:
-				return s.new AsyncTextLoader();
+			case TextHttp:
+				return s.new AsyncTextHttpLoader();
+			case TextIntranet:
+				return s.new AsyncTextIntranetLoader();
 			}
 
 			Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "getNewAsynsLoader(); Missing LoaderType: " + this);
@@ -97,19 +106,19 @@ public class TickService extends Service {
 		@Override
 		protected ArrayList<ScheduleItem> doInBackground(Void... v) {
 			try {
-				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Downloading schedules");
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Json: Downloading schedules from " + Configuration.DataSources.JSON_URL);
 
 				// Download schedule.
-				String json = Http.downloadText(Configuration.DataSources.JSON_URL + "schedule");
+				String json = Http.downloadText(Configuration.DataSources.JSON_URL);
 
 				// Parse JSON.
 				Gson gson = new GsonBuilder().registerTypeAdapter(ScheduleItem.class, new ScheduleDeserializer()).create();
 				ScheduleResponse response = gson.fromJson(json, ScheduleResponse.class);
 
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Json: Loaded schedule from " + Configuration.DataSources.JSON_URL);
 				return response.getItems();
-
 			} catch (Exception e) {
-				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "error loading JSON: schedule");
+				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "Json: error loading schedule schedule from " + Configuration.DataSources.JSON_URL);
 				Http.logError(e);
 			}
 
@@ -123,12 +132,34 @@ public class TickService extends Service {
 	}
 
 	/**
-	 * Nacitani z textaku
+	 * Nacitani z textaku na intranetu
 	 * 
 	 * @author kovi
 	 * 
 	 */
-	private class AsyncTextLoader extends AsyncTask<Void, Void, ArrayList<ScheduleItem>> {
+	private class AsyncTextIntranetLoader extends AsyncTask<Void, Void, ArrayList<ScheduleItem>> {
+
+		@Override
+		protected ArrayList<ScheduleItem> doInBackground(Void... params) {
+
+			// TODO: je to o dost slozitejsi: http://jcifs.samba.org/
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<ScheduleItem> result) {
+			updateDb(result);
+		}
+	}
+
+	/**
+	 * Nacteni souboru z internetu
+	 * 
+	 * @author kovi
+	 * 
+	 */
+	private class AsyncTextHttpLoader extends AsyncTask<Void, Void, ArrayList<ScheduleItem>> {
 
 		private final Pattern linesPattern = Pattern.compile("\n");
 		private final Pattern itemsPattern = Pattern.compile("\\s");
@@ -136,7 +167,7 @@ public class TickService extends Service {
 		@Override
 		protected ArrayList<ScheduleItem> doInBackground(Void... params) {
 			try {
-				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "Downloading schedules");
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "HttpTextFile: Downloading schedules from " + Configuration.DataSources.TXT_URL);
 
 				// Download schedule.
 				String file = Http.downloadText(Configuration.DataSources.TXT_URL);
@@ -144,16 +175,16 @@ public class TickService extends Service {
 				ArrayList<ScheduleItem> schedules = new ArrayList<ScheduleItem>();
 				String[] items = linesPattern.split(file);
 				for (String line : items) {
-					String[] item = itemsPattern.split(line);
+					String[] item = itemsPattern.split(line.trim());
 					if (item.length == 3) {
 						schedules.add(new ScheduleItem(item[0], item[1], item[2]));
 					}
 				}
 
+				Log.d(Configuration.LogTags.TICK_SERVICE_TAG, "HttpTextFile: Loaded schedule from " + Configuration.DataSources.TXT_URL);
 				return schedules;
-
 			} catch (Exception e) {
-				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "error parsing file");
+				Log.e(Configuration.LogTags.TICK_SERVICE_TAG, "HttpTextFile: error loading file " + Configuration.DataSources.TXT_URL);
 				Http.logError(e);
 			}
 

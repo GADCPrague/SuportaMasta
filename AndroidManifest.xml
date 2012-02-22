@@ -5,26 +5,32 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <uses-sdk android:minSdkVersion="7" />
 
-    <application android:debuggable="true"
+    <application
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        
-        <receiver android:name=".scheduler.SetupReceiver" android:process=":support_service_process">
-            <intent-filter >
+        <receiver
+            android:name=".scheduler.SetupReceiver"
+            android:process=":support_service_process" >
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        
-        <service android:name=".scheduler.TickService" android:process=":support_service_process">
+
+        <service
+            android:name=".scheduler.TickService"
+            android:process=":support_service_process" >
         </service>
 
-        <receiver android:name=".scheduler.TickReceiver" android:process=":support_service_process">
+        <receiver
+            android:name=".scheduler.TickReceiver"
+            android:process=":support_service_process" >
         </receiver>
-                
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -34,19 +40,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity 
+        <activity
             android:name=".SupportsActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity 
+        <activity
             android:name=".LogsActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity 
+        <activity
             android:name=".ConfigurationActivity"
             android:label="@string/app_name" >
         </activity>
-        </application>
+    </application>
 
 </manifest>

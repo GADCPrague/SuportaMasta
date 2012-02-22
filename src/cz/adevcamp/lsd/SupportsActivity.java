@@ -139,7 +139,7 @@ public class SupportsActivity extends Activity {
 	}
 
 	private MainActivityTickBroadcastServiceReceiver broadcastReceiver;
-	private static final IntentFilter notifyFilter = new IntentFilter(TickService.NOTIFICATION_INTENT_STRING);
+	private static final IntentFilter notifyFilter = new IntentFilter(Configuration.Intents.TICK_RECEIVER_NOTIFY_CHANGE);
 
 	private void startListeningToBroadcasts() {
 		if (broadcastReceiver == null) {
